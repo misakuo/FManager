@@ -62,6 +62,11 @@ public class TableService extends JFrame {
 		return sc;
 	}
 	
+	public DefaultTableModel getModel()
+	{
+		return tm;
+	}
+	
 	private void initTableModel(String[] s)
 	{
 		String[] title = s;
