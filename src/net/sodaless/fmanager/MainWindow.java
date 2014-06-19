@@ -92,6 +92,11 @@ public class MainWindow extends JFrame implements ActionListener{
 			PathManager.showWindow();
 		}
 		
+		if(e.getSource() == fm)
+		{
+			FlowManager.showWindow();
+		}
+		
 	}
 
 }
