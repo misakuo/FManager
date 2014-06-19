@@ -80,7 +80,7 @@ public class ModeSelection implements ActionListener {
 	private boolean connectionTest() throws IOException
 	{
 		String address = ConnectionService.addressBuilder(Main.ip, Main.port, "/wm/core/health/json");
-		logger.debug(ConnectionService.doGet(address));
+		logger.debug("Controller status: " + ConnectionService.doGet(address));
 		if(ConnectionService.isConnectionSuccess())
 		{
 			return true;
