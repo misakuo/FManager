@@ -71,6 +71,9 @@ public class ConnectionService {
 		String reply = "";
 		URL url = new URL(address);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("accept", "*/*");
+		conn.setRequestProperty("Content-Type", "application/json");
 		conn.connect();
 		
 		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -94,6 +97,8 @@ public class ConnectionService {
 		URL url = new URL(address);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
+		conn.setRequestProperty("accept", "*/*");
+		conn.setRequestProperty("Content-Type", "application/json");
 		conn.setDoOutput(true);
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		wr.write(param);
@@ -123,6 +128,8 @@ public class ConnectionService {
 		URL url = new URL(address);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("DELETE");
+		conn.setRequestProperty("accept", "*/*");
+		conn.setRequestProperty("Content-Type", "application/json");
 		conn.setDoOutput(true);
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		wr.write(param);
