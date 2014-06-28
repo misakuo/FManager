@@ -16,8 +16,8 @@ $RECYCLE.BIN/
 
 # JAVA Class
 *.class
-bin/
-doc/
+/bin/
+/doc/
 
 # =========================
 # Operating System Files
