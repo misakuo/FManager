@@ -41,7 +41,7 @@ public class MainWindow extends JFrame implements ActionListener{
 	private JButton fw = new JButton(Main.lang.MWfw);
 	private JButton lb = new JButton(Main.lang.MWlb);
 	private JButton qos = new JButton(Main.lang.MWqos);
-	private JButton tm = new JButton();
+	private JButton tm = new JButton(Main.lang.MWtm);
 	
 	public MainWindow()
 	{
@@ -62,6 +62,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		fw.addActionListener(this);
 		lb.addActionListener(this);
 		qos.addActionListener(this);
+		tm.addActionListener(this);
 	}
 	
 	public static void showWindow()
@@ -109,6 +110,12 @@ public class MainWindow extends JFrame implements ActionListener{
 		{
 			this.setExtendedState(ICONIFIED);
 			LoadBalanceManager.showWindow();
+		}
+		
+		if(e.getSource() == tm)
+		{
+			this.setExtendedState(ICONIFIED);
+			TrafficMonitor.showWindow();
 		}
 		
 	}
