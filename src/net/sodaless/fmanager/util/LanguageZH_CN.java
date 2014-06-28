@@ -33,6 +33,7 @@ public final class LanguageZH_CN extends Language{
 		MWfw = "防火墙";
 		MWlb = "负载均衡";
 		MWqos = "QoS";
+		MWtm = "流量监控";
 		PMTitle = "路径管理";
 		PMloadalog = "加载算法";
 		PMcalc = "计算路径";

@@ -33,6 +33,7 @@ public class LanguageEN_US extends Language{
 		MWfw = "FireWall";
 		MWlb = "Load Balance";
 		MWqos = "QoS";
+		MWtm = "Traffic monitor";
 		PMTitle = "Path Manager";
 		PMloadalog = "Loading Algorithm";
 		PMcalc = "Path Calculation";

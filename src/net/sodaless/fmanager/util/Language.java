@@ -31,6 +31,7 @@ public class Language {
 	public String MWfw = "";
 	public String MWlb = "";
 	public String MWqos = "";
+	public String MWtm = "";
 	public String PMTitle = "";
 	public String PMloadalog = "";
 	public String PMcalc = "";
