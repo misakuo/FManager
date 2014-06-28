@@ -89,12 +89,26 @@ public class MainWindow extends JFrame implements ActionListener{
 		
 		if(e.getSource() == pm)
 		{
+			this.setExtendedState(ICONIFIED);
 			PathManager.showWindow();
 		}
 		
 		if(e.getSource() == fm)
 		{
+			this.setExtendedState(ICONIFIED);
 			FlowManager.showWindow();
+		}
+		
+		if(e.getSource() == fw)
+		{
+			this.setExtendedState(ICONIFIED);
+			FireWallManager.showWindow();
+		}
+		
+		if(e.getSource() == lb)
+		{
+			this.setExtendedState(ICONIFIED);
+			LoadBalanceManager.showWindow();
 		}
 		
 	}
