@@ -20,7 +20,7 @@ import javax.swing.table.TableColumn;
 
 /**
  * @author Misaku
- *
+ * 自定义表格服务
  */
 public class TableService extends JFrame {
 
@@ -35,6 +35,9 @@ public class TableService extends JFrame {
 	private JScrollPane sc;
 	private DefaultTableCellRenderer r = new DefaultTableCellRenderer();
 	
+	/**
+	 * 默认构造器
+	 */
 	public TableService()
 	{
 		cn = getContentPane();
@@ -43,6 +46,10 @@ public class TableService extends JFrame {
 		initTable();
 	}
 	
+	/**
+	 * 带表头初始化参数的构造器
+	 * @param title 表头
+	 */
 	public TableService(String[] title)
 	{
 		cn = getContentPane();
@@ -52,16 +59,28 @@ public class TableService extends JFrame {
 		initTable();
 	}
 	
+	/**
+	 * 获取组件中的表格对象
+	 * @return
+	 */
 	public JTable getTable()
 	{
 		return table;
 	}
 	
+	/**
+	 * 获取组件中的JPanel对象
+	 * @return
+	 */
 	public JScrollPane getPanel()
 	{
 		return sc;
 	}
 	
+	/**
+	 * 获取组件中的Model对象
+	 * @return
+	 */
 	public DefaultTableModel getModel()
 	{
 		return tm;
