@@ -11,18 +11,29 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
+
+import net.sodaless.fmanager.util.MyCellEditor;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import twaver.TWaverUtil;
 
 /**
  * @author Misaku
@@ -31,9 +42,9 @@ import org.json.JSONObject;
 public class FlowManager extends JFrame implements ActionListener {
 
 	/**
-	 * 
+	 * 序列化
 	 */
-	private static final long serialVersionUID = -4561313732259115602L;
+	private static final long serialVersionUID = 1L;
 	private Logger logger;
 	private String[] s = {"Name","Priority","Match","Action"};
 	private Container cn;
@@ -45,8 +56,12 @@ public class FlowManager extends JFrame implements ActionListener {
 	private JButton add = new JButton("Add");
 	private JButton del = new JButton("Delete");
 	private JButton delall = new JButton("Delele All");
+	private JButton push = new JButton("Push");
 	private Choice sw = new Choice();
 	private JSONObject reply;
+	private flowEntryTable table = new flowEntryTable(17,2);
+	private Choice actions = new Choice();
+	private JTextField value = new JTextField(20);
 	
 	public FlowManager()
 	{
@@ -57,12 +72,12 @@ public class FlowManager extends JFrame implements ActionListener {
 		initStatusBar();
 		ts.dispose();
 		ts.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		TableColumn col = ts.getTable().getColumnModel().getColumn(2);
+		col.setPreferredWidth(295);
 		//ts.getTable().setEnabled(false);//设置整个表格为不可编辑
 		cn.add(menu,BorderLayout.NORTH);
 		cn.add(ts.getPanel(),BorderLayout.CENTER);
 		cn.add(statusBar,BorderLayout.SOUTH);
-		this.pack();
-		this.setVisible(true);
 	}
 	
 	private void initMenu()
@@ -89,7 +104,7 @@ public class FlowManager extends JFrame implements ActionListener {
 	
 	private void parseReply(String sw) throws JSONException
 	{
-		String name="",priority,match,action;
+		String name="",priority,match,action="";
 		@SuppressWarnings("unchecked")
 		Iterator<String> it = reply.getJSONObject(sw).keys();
 		while(it.hasNext())
@@ -97,8 +112,10 @@ public class FlowManager extends JFrame implements ActionListener {
 			name = it.next().toString();
 			match = matchFilter(reply.getJSONObject(sw).getJSONObject(name).getJSONObject("match"));
 			priority = String.valueOf(reply.getJSONObject(sw).getJSONObject(name).getInt("priority"));
-			action = reply.getJSONObject(sw).getJSONObject(name).getJSONArray("actions").toString();
-		
+			if(!reply.getJSONObject(sw).getJSONObject(name).isNull("actions"))
+			{
+				action = reply.getJSONObject(sw).getJSONObject(name).getJSONArray("actions").toString();
+			}
 			String[] row = {name,priority,match,action};
 			ts.addRow(row);
 		}
@@ -155,9 +172,89 @@ public class FlowManager extends JFrame implements ActionListener {
 		{
 			r = r + " src-port:" + match.getInt("transportSource");
 		}
-		logger.debug(sw.getSelectedItem() + "vaild match entry: " + r);
+		logger.debug(sw.getSelectedItem() + " vaild match entry: " + r);
 		return r;
 		
+	}
+	
+	private void showPathEditor()
+	{
+		MyCellEditor.initComboBox();
+		JFrame f = new JFrame("Flow Entry Editor");
+		Image img = Toolkit.getDefaultToolkit().getImage(f.getClass().getResource("/flow.png"));
+		f.setIconImage(img);
+		Container cn = f.getContentPane();
+		table.setRowHeight(20);
+		TableColumn firstColumn = table.getColumnModel().getColumn(0);
+		firstColumn.setPreferredWidth(150);
+		firstColumn.setMaxWidth(150);
+		firstColumn.setMinWidth(150);
+		TableColumn secondColumn = table.getColumnModel().getColumn(1);
+		secondColumn.setPreferredWidth(400);
+		JPanel bar = new JPanel();
+		
+		bar.add(actions);
+		bar.add(value);
+		bar.add(push);
+		initActions(actions);
+		initFlowHeader(table);
+		cn.add(table,BorderLayout.CENTER);
+		cn.add(bar,BorderLayout.SOUTH);
+		
+		push.addActionListener(this);
+		
+		f.pack();
+		f.setVisible(true);
+		
+	}
+	
+	private void initFlowHeader(JTable t)
+	{
+		ArrayList<String> field = new ArrayList<String>(Arrays.asList("switch","name","priority","active","ingress-port","src-mac","dst-mac","vlan-id","vlan-priority","ether-type","tos-bits","protocol","src-ip","dst-ip","src-port","dst-port","wildcards"));
+		int rowNum = 0;
+		Iterator<String> it = field.iterator();
+		while(it.hasNext())
+		{
+			//logger.debug(it.next());
+			t.setValueAt(it.next(), rowNum, 0);
+			rowNum++;
+		}
+	}
+	
+	private void initActions(Choice c)
+	{
+		ArrayList<String> actions = new ArrayList<String>(Arrays.asList("output","enqueue","strip-vlan","set-vlan-id","set-vlan-priority","set-src-mac","set-dst-mac","set-tos-bits","set-src-ip","set-dst-ip","set-src-port","set-dst-port"));
+		Iterator<String> it = actions.iterator();
+		while(it.hasNext())
+		{
+			c.add(it.next());
+		}
+	}
+	
+	private JSONObject flowBuilder(JTable t) throws JSONException
+	{
+		JSONObject flow = new JSONObject();
+		
+		for(int i=0;i<=16;i++)
+		{
+			if(t.getValueAt(i, 1) != null)
+			{
+				if(i==9)
+				{
+					String s = t.getValueAt(9, 1).toString();
+					String[] split = s.split("\\(");
+					flow.put(t.getValueAt(9, 0).toString(), split[0]);
+				}
+				else
+				{
+					flow.put(t.getValueAt(i, 0).toString(),t.getValueAt(i, 1).toString());
+			
+				}
+			}
+		}
+		flow.put("actions", actions.getSelectedItem() + "=" + value.getText());
+		logger.debug("Flow entry: " + flow);
+		return flow;
 	}
 	
 	/* （非 Javadoc）
@@ -165,7 +262,6 @@ public class FlowManager extends JFrame implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO 自动生成的方法存根
 		if(e.getSource() == query)
 		{
 			clearTable();			
@@ -185,32 +281,29 @@ public class FlowManager extends JFrame implements ActionListener {
 				logger.debug("Query result: " + ConnectionService.doGet(address));
 				
 			} catch (IOException | JSONException e1) {
-				// TODO 自动生成的 catch 块
 				e1.printStackTrace();
 			}
 		}
 		
 		if(e.getSource() == add)
 		{
-			
+			MyCellEditor.clear();
+			showPathEditor();
 		}
 		
 		if(e.getSource() == del)
 		{
-			if(ts.getTable().hasFocus())
-			{
-				String flowname;
-				flowname = ts.getTable().getValueAt(ts.getTable().getSelectedRow(), 0).toString();
-				String param = "{\"name\":\"" + flowname + "\"}";
-				try {
-					String r = ConnectionService.doDelete(ConnectionService.addressBuilder(Main.ip, Main.port, "/wm/staticflowentrypusher/json"), param);
-					ts.getModel().removeRow(ts.getTable().getSelectedRow());
-					logger.info(r);
-					l.setText("Entry " + flowname + " in switch " + sw.getSelectedItem() + "deleted" );
-				} catch (IOException e1) {
-				// TODO 自动生成的 catch 块
-				e1.printStackTrace();
-				}
+			String flowname;
+			flowname = ts.getTable().getValueAt(ts.getTable().getSelectedRow(), 0).toString();
+			String param = "{\"name\":\"" + flowname + "\"}";
+			logger.debug("Delete entry: " + param);
+			try {
+				String r = ConnectionService.doDelete(ConnectionService.addressBuilder(Main.ip, Main.port, "/wm/staticflowentrypusher/json"), param);
+				ts.getModel().removeRow(ts.getTable().getSelectedRow());
+				logger.info(r);
+				l.setText("Entry " + flowname + " in switch " + sw.getSelectedItem() + "deleted" );
+			} catch (IOException e1) {
+			e1.printStackTrace();
 			}
 		}
 		
@@ -222,7 +315,19 @@ public class FlowManager extends JFrame implements ActionListener {
 				logger.info("All static flow entry has deleted");
 				l.setText("All static flow entry has deleted");
 			} catch (IOException e1) {
-				// TODO 自动生成的 catch 块
+				e1.printStackTrace();
+			}
+		}
+		
+		if(e.getSource() == push)
+		{
+			String address = ConnectionService.addressBuilder(Main.ip, Main.port, "/wm/staticflowentrypusher/json");
+			try {
+				String re = "";
+				re = ConnectionService.doPost(address, flowBuilder(table).toString());
+				l.setText(re);
+				logger.debug(re);
+			} catch (JSONException | IOException e1) {
 				e1.printStackTrace();
 			}
 		}
@@ -252,10 +357,65 @@ public class FlowManager extends JFrame implements ActionListener {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
 		} catch (Exception e) {e.printStackTrace();} 
 		FlowManager window = new FlowManager();
-		Image img = Toolkit.getDefaultToolkit().getImage(window.getClass().getResource("/path.png"));
+		window.setSize(540, 200);
+		Image img = Toolkit.getDefaultToolkit().getImage(window.getClass().getResource("/flow.png"));
 		window.setIconImage(img);
 		window.setTitle("Flow Manager");
+		window.setVisible(true);
+		TWaverUtil.centerWindow(window);
 		window.logger.info("Flow Manager launched");
 	}
 
+}
+
+class flowEntryTable extends JTable
+{
+	private static final long serialVersionUID = 1L;
+	private Logger logger = Logger.getLogger(getClass());
+
+	public flowEntryTable(int row,int col)
+	{
+		super(row,col);
+	}
+	
+	public boolean isCellEditable(int row, int column){
+		return column==0 ? false:true;
+	}
+
+	@Override
+	public TableCellEditor getCellEditor(int row, int column) {
+		if (row == 0 && column == 1)
+		{
+			return new DefaultCellEditor(MyCellEditor.switchlist);
+		}
+		if(row == 3 && column == 1)
+		{
+			return new DefaultCellEditor(MyCellEditor.active);
+		}
+		if(row == 4 && column == 1)
+		{
+			if(this.getValueAt(0, 1) == null)
+			{
+				JOptionPane.showMessageDialog(null,"ERROR: Plese select switch first!","ERROR",JOptionPane.ERROR_MESSAGE);
+				logger.warn("Please select the switch first!");
+			}
+			ArrayList<Integer> portlist = Main.swPort.get(this.getValueAt(0, 1));
+			Iterator<Integer> it = portlist.iterator();
+			while(it.hasNext())
+			{
+				MyCellEditor.inport.addItem(it.next());
+			}
+			MyCellEditor.inport.removeItem(65534);
+			return new DefaultCellEditor(MyCellEditor.inport);
+		}
+		if(row == 9 && column == 1)
+		{
+			return new DefaultCellEditor(MyCellEditor.ethtype);
+		}
+		if(row == 11 && column == 1)
+		{
+			return new DefaultCellEditor(MyCellEditor.protocol);
+		}
+		return super.getCellEditor(row, column);
+	}
 }
