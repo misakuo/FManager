@@ -14,6 +14,11 @@ import javax.swing.JFrame;
  */
 public class QoSManager extends JFrame implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/* £¨·Ç Javadoc£©
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
