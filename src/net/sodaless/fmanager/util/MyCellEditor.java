@@ -12,8 +12,8 @@ import javax.swing.JComboBox;
 import net.sodaless.fmanager.Main;
 
 /**
+ * 定制的表格编辑器
  * @author Misaku
- *
  */
 public class MyCellEditor {
 
@@ -29,6 +29,9 @@ public class MyCellEditor {
 	public static JComboBox<String> nw_protocol = new JComboBox<String>();
 	public static JComboBox<String> fwaction = new JComboBox<String>();
 	
+	/**
+	 * 初始化各编辑器
+	 */
 	public static void initComboBox()
 	{
 		String[] etype = {"0x0800(IP)","0x0806(ARP)","0x8035(RARP)","0x814C(SNMP)","0x86DD(IPv6)","0x880B(PPP)","0x8847(MPLS-unicast)","0x8848(MPLS-multicast)","0x88CC(LLDP)"};
@@ -55,11 +58,17 @@ public class MyCellEditor {
 		
 	}
 	
+	/**
+	 * 默认构造器
+	 */
 	public MyCellEditor()
 	{
 		initComboBox();
 	}
 	
+	/**
+	 * 清空各编辑器的内容
+	 */
 	public static void clear()
 	{
 		switchlist.removeAllItems();

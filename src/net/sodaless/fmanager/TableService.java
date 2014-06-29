@@ -19,8 +19,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
 /**
- * @author Misaku
  * 自定义表格服务
+ * @author Misaku
  */
 public class TableService extends JFrame {
 
@@ -86,6 +86,10 @@ public class TableService extends JFrame {
 		return tm;
 	}
 	
+	/**
+	 * 初始化表格的Modal对象
+	 * @param s
+	 */
 	private void initTableModel(String[] s)
 	{
 		String[] title = s;
@@ -94,6 +98,9 @@ public class TableService extends JFrame {
 		
 	}
 	
+	/**
+	 * 初始化表格对象
+	 */
 	private void initTable()
 	{
 		try { 
@@ -110,6 +117,10 @@ public class TableService extends JFrame {
 		this.pack();
 	}
 	
+	/**
+	 * 将row中的信息添加到表格中
+	 * @param row
+	 */
 	public void addRow(String[] row)
 	{
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -117,6 +128,10 @@ public class TableService extends JFrame {
 		FitTableColumns(table);
 	}
 	
+	/**
+	 * 根据表格内容自动调整列宽
+	 * @param myTable
+	 */
 	public void FitTableColumns(JTable myTable)
 	{
 	    JTableHeader header = myTable.getTableHeader();

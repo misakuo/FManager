@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.json.*;
 
 /**
- * 此类用于与Floodlight的REST API交互并获取信息，为其他模块提供基础服务
+ * 用于与Floodlight的REST API交互并获取信息，为其他模块提供基础服务
  * @author Misakuo
  * @date 2014-6-16
  *

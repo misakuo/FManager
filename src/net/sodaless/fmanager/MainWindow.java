@@ -43,6 +43,9 @@ public class MainWindow extends JFrame implements ActionListener{
 	private JButton qos = new JButton(Main.lang.MWqos);
 	private JButton tm = new JButton(Main.lang.MWtm);
 	
+	/**
+	 * 默认构造器
+	 */
 	public MainWindow()
 	{
 		logger = Logger.getLogger(getClass());
@@ -54,7 +57,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		menuPanel.add(fm);
 		menuPanel.add(fw);
 		menuPanel.add(lb);
-		menuPanel.add(qos);
+		//menuPanel.add(qos); //待添加
 		menuPanel.add(tm);
 		
 		pm.addActionListener(this);
@@ -65,6 +68,9 @@ public class MainWindow extends JFrame implements ActionListener{
 		tm.addActionListener(this);
 	}
 	
+	/**
+	 * 展示主窗口，包括拓扑区域和侧边栏各功能区域
+	 */
 	public static void showWindow()
 	{
 		try { 
@@ -81,8 +87,8 @@ public class MainWindow extends JFrame implements ActionListener{
 		window.logger.info("Online mode launched");
 	}
 
-	/* （非 Javadoc）
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+	 * 消息监听器，处理事件，打开对应窗口
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {

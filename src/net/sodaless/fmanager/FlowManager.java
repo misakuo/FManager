@@ -36,8 +36,8 @@ import org.json.JSONObject;
 import twaver.TWaverUtil;
 
 /**
+ * 静态流管理模块，提供静态流的查询和增删操作
  * @author Misaku
- *
  */
 public class FlowManager extends JFrame implements ActionListener {
 
@@ -63,6 +63,9 @@ public class FlowManager extends JFrame implements ActionListener {
 	private Choice actions = new Choice();
 	private JTextField value = new JTextField(20);
 	
+	/**
+	 * 默认构造器
+	 */
 	public FlowManager()
 	{
 		logger = Logger.getLogger(getClass());
@@ -80,6 +83,9 @@ public class FlowManager extends JFrame implements ActionListener {
 		cn.add(statusBar,BorderLayout.SOUTH);
 	}
 	
+	/**
+	 * 初始化菜单条
+	 */
 	private void initMenu()
 	{
 		menu.add(sw);
@@ -97,11 +103,19 @@ public class FlowManager extends JFrame implements ActionListener {
 		delall.addActionListener(this);
 	}
 	
+	/**
+	 * 初始化状态栏
+	 */
 	private void initStatusBar()
 	{
 		statusBar.add(l);
 	}
 	
+	/**
+	 * 从请求静态流条目信息获得的回复中解析出特定switch内的流信息，并将其按条目添加到列表中
+	 * @param sw
+	 * @throws JSONException
+	 */
 	private void parseReply(String sw) throws JSONException
 	{
 		String name="",priority,match,action="";
@@ -121,6 +135,12 @@ public class FlowManager extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 对请求得到的流条目匹配域进行过滤，滤除不需匹配（值为空）的条目
+	 * @param match 请求得到的流条目匹配域
+	 * @return
+	 * @throws JSONException
+	 */
 	private String matchFilter(JSONObject match) throws JSONException
 	{
 		String r = "";
@@ -177,6 +197,9 @@ public class FlowManager extends JFrame implements ActionListener {
 		
 	}
 	
+	/**
+	 * 显示静态流添加界面，接受用户输入并下发用户输入的流信息
+	 */
 	private void showPathEditor()
 	{
 		MyCellEditor.initComboBox();
@@ -208,6 +231,10 @@ public class FlowManager extends JFrame implements ActionListener {
 		
 	}
 	
+	/**
+	 * 初始化静态流添加界面的各匹配域名称
+	 * @param t
+	 */
 	private void initFlowHeader(JTable t)
 	{
 		ArrayList<String> field = new ArrayList<String>(Arrays.asList("switch","name","priority","active","ingress-port","src-mac","dst-mac","vlan-id","vlan-priority","ether-type","tos-bits","protocol","src-ip","dst-ip","src-port","dst-port","wildcards"));
@@ -221,6 +248,10 @@ public class FlowManager extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 初始化静态流添加界面的Action列表
+	 * @param c
+	 */
 	private void initActions(Choice c)
 	{
 		ArrayList<String> actions = new ArrayList<String>(Arrays.asList("output","enqueue","strip-vlan","set-vlan-id","set-vlan-priority","set-src-mac","set-dst-mac","set-tos-bits","set-src-ip","set-dst-ip","set-src-port","set-dst-port"));
@@ -231,6 +262,12 @@ public class FlowManager extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 将用户输入的信息组合成一个静态流条目，等待下发
+	 * @param t 接受用户输入的表格对象
+	 * @return
+	 * @throws JSONException
+	 */
 	private JSONObject flowBuilder(JTable t) throws JSONException
 	{
 		JSONObject flow = new JSONObject();
@@ -257,8 +294,8 @@ public class FlowManager extends JFrame implements ActionListener {
 		return flow;
 	}
 	
-	/* （非 Javadoc）
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+	 * 消息监听器
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -334,6 +371,11 @@ public class FlowManager extends JFrame implements ActionListener {
 
 	}
 	
+	/**
+	 * 构建供给定switch查询其流表的REST API
+	 * @param sw 给定switch的dpid
+	 * @return
+	 */
 	private String apiBuilder(String sw)
 	{
 		String r = "";
@@ -341,6 +383,9 @@ public class FlowManager extends JFrame implements ActionListener {
 		return r;
 	}
 	
+	/**
+	 * 清空表格内的所有条目
+	 */
 	private void clearTable()
 	{
 		int num = ts.getTable().getRowCount();
@@ -351,6 +396,9 @@ public class FlowManager extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 流管理模块的入口，负责创建窗口
+	 */
 	public static void showWindow()
 	{
 		try { 
@@ -368,20 +416,36 @@ public class FlowManager extends JFrame implements ActionListener {
 
 }
 
+/**
+ * 内部类，定制了一个表格对象和其表格编辑器
+ * @author Misaku
+ *
+ */
 class flowEntryTable extends JTable
 {
 	private static final long serialVersionUID = 1L;
 	private Logger logger = Logger.getLogger(getClass());
 
+	/**
+	 * 默认构造器，创建一个行和列分别为row和col的表格
+	 * @param row
+	 * @param col
+	 */
 	public flowEntryTable(int row,int col)
 	{
 		super(row,col);
 	}
 	
+	/**
+	 * 返回row和col对应的单元格是否可编辑
+	 */
 	public boolean isCellEditable(int row, int column){
 		return column==0 ? false:true;
 	}
 
+	/**
+	 * 为特定单元格返回定制的编辑器
+	 */
 	@Override
 	public TableCellEditor getCellEditor(int row, int column) {
 		if (row == 0 && column == 1)

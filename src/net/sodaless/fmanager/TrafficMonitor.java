@@ -21,6 +21,7 @@ import java.util.Iterator;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
@@ -33,14 +34,14 @@ import org.json.JSONObject;
 import twaver.TWaverUtil;
 
 /**
+ * 流量监控模块，提供指定交换机指定端口上的TX/RX流量监控服务
  * @author Misaku
- *
  */
 public class TrafficMonitor extends JFrame implements ActionListener,Runnable {
 
 	
 	/**
-	 * 
+	 * 序列化
 	 */
 	private static final long serialVersionUID = 1L;
 	private final String api = "/wm/core/switch/all/port/json";
@@ -55,6 +56,9 @@ public class TrafficMonitor extends JFrame implements ActionListener,Runnable {
 	private JCheckBox log = new JCheckBox("Generate log");
 	private static Thread flush;
 
+	/**
+	 * 默认构造器
+	 */
 	public TrafficMonitor()
 	{
 		cn = this.getContentPane();
@@ -93,8 +97,16 @@ public class TrafficMonitor extends JFrame implements ActionListener,Runnable {
 			}});
 	}
 	
+	/**
+	 * 流量监控器入口，初始化界面和更新信息的线程
+	 */
 	public static void showWindow()
 	{
+		if(Main.swSet.isEmpty())
+		{
+			JOptionPane.showMessageDialog(null,"No nodes exist","ERROR",JOptionPane.ERROR_MESSAGE);
+		}
+		else{
 		flush = new Thread(new TrafficMonitor());
 		flush.start();
 		try { 
@@ -107,9 +119,15 @@ public class TrafficMonitor extends JFrame implements ActionListener,Runnable {
 		window.setTitle("Traffic Monitor");
 		window.setVisible(true);
 		TWaverUtil.centerWindow(window);
+		flush = new Thread(new TrafficMonitor());
+		flush.start();
 		window.logger.info("Traffic Monitor launched");
+		}
 	}
 	
+	/**
+	 * 消息监听器
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == start)
@@ -126,11 +144,17 @@ public class TrafficMonitor extends JFrame implements ActionListener,Runnable {
 
 	}
 
+	/**
+	 * 多线程支持
+	 */
 	@Override
 	public void run() {
 		doFlush();
 	}
 	
+	/**
+	 * 更新交换机端口统计信息
+	 */
 	private void doFlush()
 	{	
 		while(true)
@@ -146,6 +170,9 @@ public class TrafficMonitor extends JFrame implements ActionListener,Runnable {
 		}
 	}
 	
+	/**
+	 * 将已选择的交换机上的所有可用端口添加至选择框中
+	 */
 	private void addPort()
 	{
 		ArrayList<Integer> port = new ArrayList<Integer>(Main.swPort.get(swlist.getSelectedItem()));
@@ -158,6 +185,10 @@ public class TrafficMonitor extends JFrame implements ActionListener,Runnable {
 		portlist.remove("65534");
 	}
 	
+	/**
+	 * 返回交换机的端口统计信息
+	 * @return
+	 */
 	public static JSONObject getAggregate()
 	{
 		return status;

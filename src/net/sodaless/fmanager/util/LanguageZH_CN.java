@@ -4,8 +4,8 @@
 package net.sodaless.fmanager.util;
 
 /**
+ * ÖĞÎÄÓïÑÔÀà
  * @author Misaku
- *
  */
 public final class LanguageZH_CN extends Language{
 	

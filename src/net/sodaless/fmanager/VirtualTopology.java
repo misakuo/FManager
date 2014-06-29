@@ -42,8 +42,8 @@ import twaver.TWaverUtil;
 import twaver.network.TNetwork;
 
 /**
+ * 虚拟拓扑生成工具，可构建一虚拟网络并配合路径管理模块进行路由算法测试
  * @author Misaku
- *
  */
 public class VirtualTopology extends JFrame implements ActionListener{
 	
@@ -82,6 +82,9 @@ public class VirtualTopology extends JFrame implements ActionListener{
 	private JSONObject vtopo;
 	private Logger logger;
 	
+	/**
+	 * 默认构造器
+	 */
 	public VirtualTopology()
 	{
 		logger = Logger.getLogger(this.getClass());
@@ -117,6 +120,9 @@ public class VirtualTopology extends JFrame implements ActionListener{
 		vnetworkPane.add(vnetwork, BorderLayout.CENTER);
 	}
 
+	/**
+	 * 虚拟拓扑模块入口，负责创建视图
+	 */
 	public static void Init()
 	{
 		try { 
@@ -133,6 +139,10 @@ public class VirtualTopology extends JFrame implements ActionListener{
 		frame.setVisible(true);
 	}
 	
+	/**
+	 * 从已构建好的拓扑中提取出所有Host并将其加入全局Host集合中
+	 * @throws JSONException
+	 */
 	private void exportHost() throws JSONException
 	{
 		JSONArray link = vtopo.getJSONArray("links");
@@ -151,6 +161,9 @@ public class VirtualTopology extends JFrame implements ActionListener{
 		}
 	}
 
+	/**
+	 * 消息监听者
+	 */
 	public void actionPerformed(ActionEvent e) {
 
 		if(e.getSource() == addHost)

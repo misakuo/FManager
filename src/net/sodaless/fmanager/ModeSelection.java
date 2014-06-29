@@ -21,8 +21,8 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 
 /**
+ * 模式选择模块，由用户选择在线模式的控制器IP/PORT或选择进入离线模式
  * @author Misaku
- *
  */
 public class ModeSelection implements ActionListener {
 	
@@ -37,6 +37,9 @@ public class ModeSelection implements ActionListener {
 	private JCheckBox language = new JCheckBox();
 	private Logger logger;
 	
+	/**
+	 * 默认构造器
+	 */
 	public ModeSelection()
 	{
 		logger = Logger.getLogger(this.getClass());
@@ -67,16 +70,29 @@ public class ModeSelection implements ActionListener {
 		init.setVisible(true);
 	}
 	
+	/**
+	 * 获取用户输入的控制器IP地址
+	 * @return
+	 */
 	private String getIP()
 	{
 		return ip.getText();
 	}
 	
+	/**
+	 * 获取用户输入的控制器REST服务绑定端口
+	 * @return
+	 */
 	private String getPort()
 	{
 		return port.getText();
 	}
 	
+	/**
+	 * 测试用户指定的控制器是否可供连接
+	 * @return
+	 * @throws IOException
+	 */
 	private boolean connectionTest() throws IOException
 	{
 		String address = ConnectionService.addressBuilder(Main.ip, Main.port, "/wm/core/health/json");
@@ -91,6 +107,10 @@ public class ModeSelection implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 启动在线模式
+	 * @throws IOException
+	 */
 	private void launchOnlineMode() throws IOException
 	{
 		if(connectionTest())
@@ -110,6 +130,9 @@ public class ModeSelection implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 显示模式选择窗口
+	 */
 	public static void start()
 	{
 		Main.selectLanguage(true);
@@ -120,8 +143,8 @@ public class ModeSelection implements ActionListener {
 		m.logger.info("Current Language: ZH-CN");
 	}
 
-	/* （非 Javadoc）
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+	 * 消息监听器，监听事件
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {

@@ -4,8 +4,8 @@
 package net.sodaless.fmanager.util;
 
 /**
+ * Ó¢ÎÄÓïÑÔÀà
  * @author Misaku
- *
  */
 public class LanguageEN_US extends Language{
 

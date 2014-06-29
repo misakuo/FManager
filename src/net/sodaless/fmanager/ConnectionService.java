@@ -23,6 +23,9 @@ public class ConnectionService {
 
 	private static boolean ConnectionSuccess = false;
 	
+	/**
+	 * 初始化连接成功状态为false
+	 */
 	private static void initConnectionSuccess()
 	{
 		setConnectionSuccess(false);

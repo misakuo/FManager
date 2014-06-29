@@ -9,15 +9,18 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;  
   
 /** 
- * 超链接按钮。 
- *  
- * @author Elvis 
+ * 超链接标签 
+ * @author Misaku
  */  
 public class LinkButton extends JLabel {  
  private static final long serialVersionUID = 1L;  
  private String text;    
  private Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);  //建立一个光标为手指类型的鼠标
-  
+ 
+ /**
+  * 默认构造器器
+  * @param url
+  */
  public LinkButton(final String url) {  
   addMouseListener(new MouseAdapter() {  
    public void mouseClicked(MouseEvent e) {  
@@ -31,13 +34,17 @@ public class LinkButton extends JLabel {
     setClickedText();  
    }  
   
-   //鼠标移入标签时,设置文本样式事件
+   /**
+    * 鼠标移入标签时,设置文本样式事件
+    */
    public void mouseEntered(MouseEvent e) {  
     setHandCursor(); 
     setMoveInText(); 
    }  
      
-   //鼠标移出标签时,设置文本样式事件
+   /**
+    * 鼠标移出标签时,设置文本样式事件
+    */
    public void mouseExited(MouseEvent e) {  
     setDefaultCursor();
     setMoveOutText();  
@@ -45,39 +52,57 @@ public class LinkButton extends JLabel {
   });  
  }  
   
- //设置初始样式
+ /**
+  * 设置初始样式
+  */
  public void setText(String text) {  
   String content = "<html><font color=blue>" + text  + "</font></html>";  
   this.text = text;  
   super.setText(content);  
  }  
 
- //设置鼠标单击样式  
+ /**
+  * 设置鼠标单击样式  
+  */
  private void setClickedText() {  
   String content = "<html><font color=green><u>" + text  + "</u></font></html>";  
   super.setText(content);  
  }  
 
-//设置鼠标移入样式
+/**
+ * 设置鼠标移入样式
+ */
 private void setMoveInText(){
 String content="<html><font color=red><u>"+text+"</u></font></html>";
 super.setText(content);
 }
 
-//设置鼠标移出样式
+/**
+ * 设置鼠标移出样式
+ */
 private void setMoveOutText(){
 String content="<html><font color=blue>"+text+"</font></html>";
 super.setText(content);
 }
  
- //设置光标为手指
+ /**
+  * 设置光标为手指
+  */
  private void setHandCursor() {  
   this.setCursor(handCursor);  
- }  
- //设置光标为默认
+ } 
+ 
+ /**
+  * 设置光标为默认
+  */
  private void setDefaultCursor() {  
   this.setCursor(null);  
- }  
+ } 
+ 
+ /**
+  * 用于测试
+  * @param args
+  */
  public static void main(String[] args) {  
   JFrame f = new JFrame();  
   f.setSize(400, 400);  

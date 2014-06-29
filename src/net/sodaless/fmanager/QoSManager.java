@@ -9,8 +9,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 /**
+ * QoS策略管理模块
  * @author Misaku
- *
+ * TODO:使用支持qos的控制器，并根据其REST API完成此模块
+ * @see http://docs.projectfloodlight.org/display/floodlightcontroller/How+to+implement+Quality+Of+Service+using+Floodlight
  */
 public class QoSManager extends JFrame implements ActionListener {
 

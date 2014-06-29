@@ -34,9 +34,8 @@ import org.json.JSONObject;
 import twaver.TWaverUtil;
 
 /**
- * @author Misaku
  * 负载均衡服务管理器，可对负载均衡策略各条目进行增删操作
- *
+ * @author Misaku
  */
 public class LoadBalanceManager extends JFrame implements ActionListener {
 

@@ -4,8 +4,8 @@
 package net.sodaless.fmanager.util;
 
 /**
+ * 语言类的父类
  * @author Misaku
- *
  */
 public class Language {
 	
@@ -45,17 +45,27 @@ public class Language {
 	public String PMadd = "";
 	public String PMreset = "";
 	
-	
+	/**
+	 * 默认构造器，初始化语言为中文
+	 */
 	public Language()
 	{
 		LanguageType = "ZH-CN";
 	}
 	
+	/**
+	 * 构造器，设置语言类型为lang
+	 * @param lang
+	 */
 	public Language(String lang)
 	{
 		LanguageType = lang;
 	}
 	
+	/**
+	 * 获取当前语言类型
+	 * @return
+	 */
 	public String getLanguageType()
 	{
 		return LanguageType;

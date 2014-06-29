@@ -37,8 +37,8 @@ import org.json.JSONObject;
 import twaver.TWaverUtil;
 
 /**
+ * 防火墙策略管理模块，提供防火墙功能的开启关闭，防火墙策略的查询增删操作
  * @author Misaku
- *
  */
 public class FireWallManager extends JFrame implements ActionListener {
 
@@ -64,6 +64,9 @@ public class FireWallManager extends JFrame implements ActionListener {
 	private LinkButton link = new LinkButton("http://docs.projectfloodlight.org/display/floodlightcontroller/Firewall+REST+API");
 	private RulesEditor rules = new RulesEditor(12,2);
 	
+	/**
+	 * 默认构造器
+	 */
 	public FireWallManager()
 	{
 		logger = Logger.getLogger(getClass());
@@ -89,6 +92,9 @@ public class FireWallManager extends JFrame implements ActionListener {
 		cn.add(status,BorderLayout.SOUTH);
 	}
 	
+	/**
+	 * 初始化菜单栏并为菜单栏上的栏目添加相应监听器
+	 */
 	private void initMenu()
 	{
 		menu.add(stat);
@@ -108,6 +114,9 @@ public class FireWallManager extends JFrame implements ActionListener {
 		del.addActionListener(this);		
 	}
 	
+	/**
+	 * 初始化状态栏
+	 */
 	private void initStatusBar()
 	{
 		status.add(l);
@@ -115,6 +124,9 @@ public class FireWallManager extends JFrame implements ActionListener {
 		l.setText("Status:");
 	}
 	
+	/**
+	 * 防火墙管理模块的入口，生成界面
+	 */
 	public static void showWindow()
 	{
 		try { 
@@ -130,6 +142,9 @@ public class FireWallManager extends JFrame implements ActionListener {
 		window.logger.info("FireWall Manager launched");
 	}
 	
+	/**
+	 * 防火墙策略编辑界面
+	 */
 	private void showRulesEditor()
 	{
 		clearTable();
@@ -160,6 +175,9 @@ public class FireWallManager extends JFrame implements ActionListener {
 		push.addActionListener(this);
 	}
 	
+	/**
+	 * 初始化防火墙策略编辑器各条目的名称
+	 */
 	private void initRulesHeader()
 	{
 		ArrayList<String> field = new ArrayList<String>(Arrays.asList("switchid","priority","src-inport","src-mac","dst-mac","dl-type","src-ip","dst-ip","nw-proto","tp-src","tp-dst","action"));
@@ -173,6 +191,12 @@ public class FireWallManager extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 对获取到的防火墙策略进行过滤，滤除无效条目
+	 * @param match 获取到的条目
+	 * @return 过滤后的匹配策略
+	 * @throws JSONException
+	 */
 	private String matchFilter(JSONObject match) throws JSONException
 	{
 		String r = "";
@@ -220,6 +244,9 @@ public class FireWallManager extends JFrame implements ActionListener {
 		return r;
 	}
 	
+	/**
+	 * 清空防火墙条目列表
+	 */
 	private void clearTable()
 	{
 		int num = ts.getTable().getRowCount();
@@ -230,8 +257,8 @@ public class FireWallManager extends JFrame implements ActionListener {
 		}
 	}
 	
-	/* （非 Javadoc）
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+	 * 消息监听器
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -344,7 +371,8 @@ public class FireWallManager extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * @param r
+	 * 从获取到的防火墙策略回复信息中解析出有效信息并按字段分类放入防火墙策略列表
+	 * @param r 获取到的策略信息
 	 * @throws JSONException 
 	 */
 	private void parseReply(JSONArray r) throws JSONException 
@@ -362,6 +390,12 @@ public class FireWallManager extends JFrame implements ActionListener {
 		}		
 	}
 
+	/**
+	 * 从策略编辑器中获取用户输入并将有效信息组合成防火墙策略，等待下发
+	 * @param t 策略编辑器对象
+	 * @return 防火墙策略
+	 * @throws JSONException
+	 */
 	private JSONObject ruleBuilder(JTable t) throws JSONException
 	{
 		JSONObject rule = new JSONObject();
@@ -378,6 +412,11 @@ public class FireWallManager extends JFrame implements ActionListener {
 	}
 }
 
+/**
+ * 内部类，实现了一个定制的防火墙策略编辑器
+ * @author Misaku
+ *
+ */
 class RulesEditor extends JTable
 {
 	/**
@@ -386,16 +425,27 @@ class RulesEditor extends JTable
 	private static final long serialVersionUID = 1L;
 	private Logger logger = Logger.getLogger(getClass());
 
+	/**
+	 * 构造器，构造一个row行col列的表格
+	 * @param row
+	 * @param col
+	 */
 	public RulesEditor(int row,int col)
 	{
 		super(row,col);
 	}
 	
+	/**
+	 * 返回row行col列对应的单元格是否可编辑
+	 */
 	public boolean isCellEditable(int row, int column)
 	{
 		return column==0 ? false:true;
 	}
 	
+	/**
+	 * 为特定行列的单元格定制编辑器
+	 */
 	public TableCellEditor getCellEditor(int row, int column) {
 		if (row == 0 && column == 1)
 		{

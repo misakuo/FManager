@@ -34,13 +34,13 @@ import twaver.TaskScheduler;
 import twaver.chart.LineChart;
 
 /**
+ * 用于展示流量情况的动态图表
  * @author Misaku
- *
  */
 public class TrafficChart extends JFrame{
 
 	/**
-	 * 
+	 * 序列化
 	 */
 	private static final long serialVersionUID = 1L;
 	private Logger logger = Logger.getLogger(getClass());
@@ -56,6 +56,13 @@ public class TrafficChart extends JFrame{
 	private boolean log = false;
 	private String logname;
 	
+	/**
+	 * 默认构造器器
+	 * @param d 交换机的dpid
+	 * @param p 交换机指定端口
+	 * @param t 要监控的流量类型
+	 * @param l 是否生成流量日志
+	 */
 	public TrafficChart(String d,String p,String t,boolean l)
 	{	
 		try { 
@@ -107,6 +114,9 @@ public class TrafficChart extends JFrame{
         this.setTitle(title);        
 	}
 	
+	/**
+	 * 绘制流量图表，每秒更新一次
+	 */
 	private void drawChart()
 	{
 		TaskScheduler.getInstance().register(new TaskAdapter() {
@@ -131,6 +141,14 @@ public class TrafficChart extends JFrame{
         });
 	}
 	
+	/**
+	 * 获取指定交换机指定端口指定类型的流量信息并返回
+	 * @param dpid
+	 * @param port
+	 * @param type
+	 * @return
+	 * @throws JSONException
+	 */
 	private int getPortAggregate(String dpid,String port,String type) throws JSONException
 	{
 		int traffic=0;
@@ -165,12 +183,22 @@ public class TrafficChart extends JFrame{
 		return traffic;
 	}
 	
+	/**
+	 * 图表模块的入口
+	 * @param d
+	 * @param p
+	 * @param t
+	 * @param l
+	 */
 	public static void showChart(String d,String p,String t,boolean l)
 	{
 		TrafficChart tc = new TrafficChart(d,p,t,l);
 		tc.drawChart();
 	}
 	
+	/**
+	 * 在当前工作目录下创建一个新的日志文件
+	 */
 	private void newLog()
 	{
 		java.text.SimpleDateFormat  formatter=new  java.text.SimpleDateFormat("yyyyMMdd-HH-mm-ss");
@@ -178,6 +206,10 @@ public class TrafficChart extends JFrame{
 		logger.info("Log file " + logname + " created");
 	}
 	
+	/**
+	 * 将str的内容写入日志文件
+	 * @param str
+	 */
 	private void toLog(String str)
 	{
 		java.text.SimpleDateFormat  formatter=new  java.text.SimpleDateFormat("mm:ss:SSS");

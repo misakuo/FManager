@@ -22,7 +22,7 @@ import twaver.*;
 import twaver.network.TNetwork;
 
 /**
- * 此类用于提供拓扑显示服务
+ * 用于提供拓扑显示服务
  * @author Misakuo
  * @date 2014-6-16
  *
@@ -40,8 +40,6 @@ public class TopologyVisualizationServices {
 	
 	/**
 	 * 默认构造函数
-	 * @throws JSONException
-	 * @throws IOException 
 	 */
 	public TopologyVisualizationServices()
 	{
@@ -63,8 +61,6 @@ public class TopologyVisualizationServices {
 	/**
 	 * 构造函数
 	 * @param topoinfo
-	 * @throws JSONException
-	 * @throws IOException 
 	 */
 	public TopologyVisualizationServices(JSONObject topoinfo)
 	{

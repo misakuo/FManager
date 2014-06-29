@@ -41,8 +41,8 @@ import twaver.TWaverUtil;
 import twaver.network.TNetwork;
 
 /**
+ * 路径管理模块，提供路径的计算和下发服务
  * @author Misaku
- *
  */
 public class PathManager extends JFrame implements ActionListener {
 
@@ -80,6 +80,9 @@ public class PathManager extends JFrame implements ActionListener {
 	private boolean tablecreated = false;
 	private int flownum = 0;
 	
+	/**
+	 * 默认构造器
+	 */
 	public PathManager()
 	{
 		if(Main.online == false)
@@ -124,6 +127,9 @@ public class PathManager extends JFrame implements ActionListener {
 		
 	}
 	
+	/**
+	 * 显示路径管理模块窗口，包括拓扑区域和侧边栏
+	 */
 	public static void showWindow()
 	{
 		try { 
@@ -140,6 +146,11 @@ public class PathManager extends JFrame implements ActionListener {
 		window.logger.info("Path Manager launched");
 	}
 	
+	/**
+	 * 重置拓扑信息，流信息和路径信息
+	 * @throws JSONException
+	 * @throws IOException
+	 */
 	private void reset() throws JSONException, IOException
 	{
 		String mode = null;
@@ -168,6 +179,9 @@ public class PathManager extends JFrame implements ActionListener {
 		logger.info("Current mode is " + mode + ", the context is initialized");
 	}
 	
+	/**
+	 * 用已选择的路由算法计算路径
+	 */
 	private void pathCalc()
 	{
 		Runtime rn=Runtime.getRuntime(); 
@@ -209,8 +223,7 @@ public class PathManager extends JFrame implements ActionListener {
 				/**
 				 * 将算法模块输出（pathjson）转换成map，存入path中
 				 * pathjson形如[{"0":"192.168.3.13"},{"1":"00:00:00:e0:4c:50:5f:29"},{"2":"00:00:00:e0:4c:43:32:68"},{"3":"192.168.1.140"}]
-				 */
-				
+				 */				
 				for(int a=0;a<pathjson.length();a++)//遍历输出json，将每一条路径信息put入array
 				{
 					HashMap<Integer,String> path = new HashMap<Integer,String>();//解析出的单条路径信息
@@ -248,11 +261,14 @@ public class PathManager extends JFrame implements ActionListener {
 			
 	}
 	
+	/**
+	 * 将路径信息集合转换成单条路径并依次下发
+	 * @param path
+	 * @param color
+	 * @throws JSONException
+	 */
 	private void toFlows(HashMap<Integer,String> path,int color) throws JSONException
 	{
-		/**
-		 * 将路径信息转换为JSON
-		 */
 		if(!(path.get(1).equals("No Path!")))
 		{
 			JSONObject flow = new JSONObject();
@@ -288,11 +304,15 @@ public class PathManager extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 给定一个link上的左端点，找出其与link相连的端口。
+	 * @param left
+	 * @param right
+	 * @return
+	 * @throws JSONException
+	 */
 	private int findOutputPort(String left,String right) throws JSONException
 	{
-		/**
-		 * 给定一个link上的左端点，找出其与link相连的端口。
-		 */
 		int length=0,port=0;
 		
 		length = network.getJSONArray("links").length();
@@ -313,6 +333,12 @@ public class PathManager extends JFrame implements ActionListener {
 		return port;
 	}
 	
+	/**
+	 * 为路径信息集合中的每一条路径生成一条与其对称的路径并下发
+	 * @param path
+	 * @param color
+	 * @throws JSONException
+	 */
 	private void symmetricPath (HashMap<Integer,String> path,int color) throws JSONException
 	{
 		if(!(path.get(1).equals("No Path!")))
@@ -350,6 +376,10 @@ public class PathManager extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 下发流到switch
+	 * @param flow
+	 */
 	private void pushFlows(JSONObject flow)
 	{
 		String f = flow.toString();
@@ -362,6 +392,12 @@ public class PathManager extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 将结点current和next之间的路径用颜色c进行高亮
+	 * @param current
+	 * @param next
+	 * @param c
+	 */
 	private void linkHighLight(String current,String next,int c)
 	{
 		TDataBox pbox = tvs.getDataBox();
@@ -381,6 +417,11 @@ public class PathManager extends JFrame implements ActionListener {
 		pnetwork.updateUI();
 	}
 	
+	/**
+	 * 返回c对应的颜色值
+	 * @param c
+	 * @return
+	 */
 	private Color selectColor(int c)
 	{
 		Color color = null;
@@ -413,6 +454,9 @@ public class PathManager extends JFrame implements ActionListener {
 		return color;
 	}
 	
+	/**
+	 * 显示一个待添加的流列表
+	 */
 	private void showFlowSet()
 	{
 		String[] title = {"#","src","dst","bandwidth"};
@@ -421,6 +465,9 @@ public class PathManager extends JFrame implements ActionListener {
 		ts.setTitle("流条目列表");
 	}
 	
+	/**
+	 * 显示一个计算出的路径集合列表
+	 */
 	private void showPathSet()
 	{
 		String[] title = {"#","src","dst","Path"};
@@ -429,8 +476,8 @@ public class PathManager extends JFrame implements ActionListener {
 		pathtable.setTitle("路径列表");
 	}
 	
-	/* （非 Javadoc）
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+	 * 消息监听器
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
