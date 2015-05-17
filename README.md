@@ -6,7 +6,7 @@ download: http://pan.baidu.com/s/1ntBgDK1<br>
 
 ========
 
-Author: Li JianFeng @SCUEC<br>
+Author: moxun@SCUEC<br>
 
 大家嚎啊＼（⌒∇⌒）／<br>
 我又回来更新这个玩意了o(*￣3￣)o<br>
